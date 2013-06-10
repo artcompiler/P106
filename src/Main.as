@@ -25,7 +25,7 @@ package {
     var stageWidth = 800;
     var stageHeight = 600;
     public class Main extends Sprite {
-        private var ball, surface;
+        public static var paddle, ball, surface;
         public function Main() {
             stage.frameRate = 30;
 	    setup();
@@ -41,8 +41,10 @@ package {
             background(0xEEEEEE);
             surface = new Surface(40, 40, stageWidth-80, stageHeight-80);
             ball = new Ball(40, 40, stageWidth-80, stageHeight-80);
+            paddle = new Paddle(40, 40, stageWidth-80, stageHeight-80);
             addChild(surface);
             addChild(ball);
+            addChild(paddle);
         }
         private function draw(e) {
             ball.draw();
@@ -64,9 +66,9 @@ class Ball extends Shape {
         this.rangeWidth = rangeWidth;
         this.rangeHeight = rangeHeight;
         x0 = rangeX + 20;
-        y0 = rangeHeight / 2;
+        y0 = rangeY + rangeHeight / 2;
         r0 = 10;
-        graphics.beginFill(0xFFFFFF, 1);
+        graphics.beginFill(0xCC5555, 1);
         graphics.drawCircle(x0, y0, r0);
     }
     function move(x, y, r) {
@@ -74,6 +76,63 @@ class Ball extends Shape {
         graphics.beginFill(0xAAFFAA);
         graphics.drawCircle(x0, y0, r0);        
         graphics.beginFill(0xCC5555);
+        graphics.drawCircle(x, y, r);
+        x0 = x, y0 = y;
+    }
+    var dx = 1, dy = 0, v0 = 10;
+    function draw() {
+        //trace("draw() x0=" + x0 + " y0=" + y0 + " r0=" + r0 + " rangeX=" + rangeX + " rangeY=" + rangeY);
+        if (x0 - r0 <= rangeX ||
+            x0 + r0 >= rangeX + rangeWidth) {
+            dx = -dx;
+        }
+        if (y0 - r0 <= rangeY ||
+            y0 + r0 >= rangeY + rangeHeight) {
+            dy = -dy;
+        }
+        // Compute the radial distance between objects.
+        var ball = this;
+        var paddle = Main.paddle;
+        var rx = ball.x0 - paddle.x0;
+        var ry = ball.y0 - paddle.y0;
+        var rd = Math.sqrt(rx * rx + ry * ry);
+        // If radial distance is less than or equal to combined radii of objects
+        // then the have collided.
+        var rd0 = paddle.r0 + ball.r0;
+        if (rd <= rd0) {
+            trace("PONG rd0=" + rd0 + " rd=" + rd);
+            var rx0 = rx / rd;
+            var ry0 = ry / rd;
+            trace("PONG rx0=" + rx0 + " ry0=" + ry0 + " dx=" + dx + " dy=" + dy);
+            dx = dx + rx;
+            dy = dy + ry;
+            trace("PONG rx0=" + rx0 + " ry0=" + ry0 + " dx=" + dx + " dy=" + dy);
+        }
+        move(x0 + v0 * dx, y0 + v0 * dy, r0);
+    }
+}
+
+class Paddle extends Sprite {
+    var rangeX, rangeY, rangeWidth, rangeHeight;
+    var x0, y0, r0;
+    var shape;
+    function Paddle(rangeX, rangeY, rangeWidth, rangeHeight) {
+        var child = shape = new Shape;
+        this.rangeX = rangeX;
+        this.rangeY = rangeY;
+        this.rangeWidth = rangeWidth;
+        this.rangeHeight = rangeHeight;
+        x0 = rangeX + rangeWidth / 2;
+        y0 = rangeY + rangeHeight / 2;
+        r0 = 100;
+        graphics.beginFill(0x5555FF, 1);
+        graphics.drawCircle(x0, y0, r0);
+    }
+    function move(x, y, r) {
+        // x and y are absolute coordinates
+        graphics.beginFill(0xAAFFAA);
+        graphics.drawCircle(x0, y0, r0);        
+        graphics.beginFill(0x5555FF);
         graphics.drawCircle(x, y, r);
         x0 = x, y0 = y;
     }
