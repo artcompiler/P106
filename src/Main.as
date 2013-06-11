@@ -45,6 +45,7 @@ package {
             addChild(surface);
             addChild(ball);
             addChild(paddle);
+            addChild((mask = surface.borderMask()));
         }
         private function draw(e) {
             ball.draw();
@@ -67,7 +68,7 @@ class Ball extends Shape {
         this.rangeHeight = rangeHeight;
         x0 = rangeX + 20;
         y0 = rangeY + rangeHeight / 2;
-        r0 = 5;
+        r0 = 8;
         graphics.beginFill(0xCC5555, 1);
         graphics.drawCircle(x0, y0, r0);
     }
@@ -185,9 +186,20 @@ class Paddle extends Sprite {
 class Surface extends Sprite {
     var surfaceX, surfaceY, surfaceWidth, surfaceHeight;
     function Surface(x, y, width, height) {
+        surfaceX = x;
+        surfaceY = y;
+        surfaceWidth = width;
+        surfaceHeight = height;
         var child = new Shape;
         child.graphics.beginFill(0xAAFFAA);
         child.graphics.drawRect(x, y, width, height);
         addChild(child);
+    }
+
+    function borderMask() {
+        var mask = new Shape;
+        mask.graphics.beginFill(0x000000, 0);
+        mask.graphics.drawRect(surfaceX, surfaceY, surfaceWidth, surfaceHeight);
+        return mask;
     }
 }
