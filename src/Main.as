@@ -22,10 +22,12 @@
 package {
     import flash.display.*;
     import flash.events.*;
+    var stageX = 40;
+    var stageY = 40;
     var stageWidth = 800;
     var stageHeight = 600;
     public class Main extends Sprite {
-        public static var paddle, ball, surface;
+        public static var paddle1, paddle2, ball, surface;
         public function Main() {
             stage.frameRate = 30;
 	    setup();
@@ -41,10 +43,12 @@ package {
             background(0xEEEEEE);
             surface = new Surface(40, 40, stageWidth-80, stageHeight-80);
             ball = new Ball(40, 40, stageWidth-80, stageHeight-80);
-            paddle = new Paddle(40, 40, stageWidth-80, stageHeight-80);
+            paddle1 = new Paddle(40, 40, stageWidth-80, stageHeight-80, 200, stageHeight / 2);
+            paddle2 = new Paddle(40, 40, stageWidth-80, stageHeight-80, stageWidth - 200, stageHeight / 2);
             addChild(surface);
             addChild(ball);
-            addChild(paddle);
+            addChild(paddle1);
+            addChild(paddle2);
             addChild((mask = surface.borderMask()));
         }
         private function draw(e) {
@@ -92,9 +96,9 @@ class Ball extends Shape {
         }
     }
 
-    function checkPaddle() {
+    function checkPaddle(paddle) {
         var ball = this;
-        var paddle = Main.paddle;
+        //        var paddle = Main.paddle;
         var xr = ball.x0 - paddle.x0;
         var yr = ball.y0 - paddle.y0;
         var dr = Math.sqrt(xr * xr + yr * yr);
@@ -107,7 +111,7 @@ class Ball extends Shape {
             var sina = Math.sin(a);
 
             // rotate position
-            var xb = 110; //xr * cosa + yr * sina;
+            var xb = dr0; //xr * cosa + yr * sina;
             var yb = 0; //yr * cosa - xr * sina;
 
             // rotate direction
@@ -148,7 +152,8 @@ class Ball extends Shape {
         graphics.beginFill(0xAAFFAA);
         graphics.drawCircle(x0, y0, r0);
         checkWalls();
-        checkPaddle();
+        checkPaddle(Main.paddle1);
+        checkPaddle(Main.paddle2);
         move();
     }
 }
@@ -157,15 +162,15 @@ class Paddle extends Sprite {
     var rangeX, rangeY, rangeWidth, rangeHeight;
     var x0, y0, r0;
     var shape;
-    function Paddle(rangeX, rangeY, rangeWidth, rangeHeight) {
+    function Paddle(rangeX, rangeY, rangeWidth, rangeHeight, x, y) {
         var child = shape = new Shape;
         this.rangeX = rangeX;
         this.rangeY = rangeY;
         this.rangeWidth = rangeWidth;
         this.rangeHeight = rangeHeight;
-        x0 = rangeX + rangeWidth / 2;
-        y0 = rangeY + rangeHeight / 2;
-        r0 = 100;
+        x0 = x;
+        y0 = y;
+        r0 = 50;
         graphics.beginFill(0x5555FF, 1);
         graphics.drawCircle(x0, y0, r0);
     }
