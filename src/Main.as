@@ -22,8 +22,8 @@
 package {
     import flash.display.*;
     import flash.events.*;
-	import flash.ui.*;
-	
+    import flash.ui.*;
+
     var stageX = 40;
     var stageY = 40;
     var stageWidth = 800;
@@ -32,9 +32,9 @@ package {
         public static var paddle1, paddle2, ball, surface;
         public function Main() {
             stage.frameRate = 30;
-	    	setup();
+            setup();
             addEventListener(Event.ENTER_FRAME, draw);
-		}
+        }
         private function background(color) {
             var child = new Shape;
             child.graphics.beginFill(color, 0.3);
@@ -53,9 +53,8 @@ package {
             addChild(paddle1);
             addChild(paddle2);
             addChild((mask = surface.borderMask()));
-			paddle1.setup(Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN);
-			paddle2.setup(Keyboard.A, Keyboard.D, Keyboard.W, Keyboard.S);
-			
+            paddle1.setup(Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN);
+            paddle2.setup(Keyboard.A, Keyboard.D, Keyboard.W, Keyboard.S);
         }
         private function draw(e) {
             ball.draw();
@@ -169,7 +168,7 @@ class Paddle extends Sprite {
     var rangeX, rangeY, rangeWidth, rangeHeight;
     var x0, y0, r0;
     var shape;
-	var left, right, up, down;
+    var left, right, up, down;
     function Paddle(rangeX, rangeY, rangeWidth, rangeHeight, x, y) {
         var child = shape = new Shape;
         this.rangeX = rangeX;
@@ -182,41 +181,36 @@ class Paddle extends Sprite {
         graphics.beginFill(0x5555FF, 1);
         graphics.drawCircle(x0, y0, r0);
     }
-	function setup(left, right, up, down) {
- 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownEvent);
-		this.left = left;
-		this.right = right;
-		this.up = up;
-		this.down = down;
-	}
+    function setup(left, right, up, down) {
+        stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownEvent);
+        this.left = left;
+        this.right = right;
+        this.up = up;
+        this.down = down;
+    }
     function move(x, y, r) {
         // x and y are absolute coordinates
         graphics.beginFill(0xAAFFAA);
-        graphics.drawCircle(x0, y0, r0);        
+        graphics.drawCircle(x0, y0, r0);
         graphics.beginFill(0x5555FF);
         graphics.drawCircle(x, y, r);
         x0 = x, y0 = y;
     }
-	function keyDownEvent(myevent) {
-		trace(myevent.keyCode)
-		if (myevent.keyCode == this.up) {
-			move(x0, y0 - 20, r0);
-		}
-		if (myevent.keyCode == this.down) {
-			move(x0, y0 + 20, r0);
-		}
-		if (myevent.keyCode == this.left) {
-			move(x0 - 20, y0, r0);
-		}
-		if (myevent.keyCode == this.right) {
-			move(x0 + 20, y0, r0);
-		}     
-	}
-	function draw() {
-		graphics.beginFill(0x5555FF, 1);
-	    graphics.drawCircle(x0, y0, r0);		
-	}
-
+    function keyDownEvent(myevent) {
+        if (myevent.keyCode == this.up) {
+            move(x0, y0 - 20, r0);
+        } else if (myevent.keyCode == this.down) {
+            move(x0, y0 + 20, r0);
+        } else if (myevent.keyCode == this.left) {
+            move(x0 - 20, y0, r0);
+        } else if (myevent.keyCode == this.right) {
+            move(x0 + 20, y0, r0);
+        }
+    }
+    function draw() {
+        graphics.beginFill(0x5555FF, 1);
+        graphics.drawCircle(x0, y0, r0);
+    }
 }
 class Surface extends Sprite {
     var surfaceX, surfaceY, surfaceWidth, surfaceHeight;
