@@ -16,7 +16,7 @@
  */
 
 /*
-  Pong for Shumway
+  Air Hockey for Shumway
 */
 
 package {
@@ -148,7 +148,6 @@ class Ball extends Shape {
     }
 
     function draw() {
-        //trace("draw() x0=" + x0 + " y0=" + y0 + " r0=" + r0 + " rangeX=" + rangeX + " rangeY=" + rangeY);
         graphics.beginFill(0xAAFFAA);
         graphics.drawCircle(x0, y0, r0);
         checkWalls();
