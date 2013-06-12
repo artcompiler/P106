@@ -25,12 +25,12 @@ package {
     var stageWidth = 800;
     var stageHeight = 600;
     public class Main extends Sprite {
-        public static var paddle, ball, surface;
+        public static var paddle, ball, surface, paddletwo;
         public function Main() {
             stage.frameRate = 30;
-	    setup();
+	    	setup();
             addEventListener(Event.ENTER_FRAME, draw);
-	}
+		}
         private function background(color) {
             var child = new Shape;
             child.graphics.beginFill(color, 0.3);
@@ -42,9 +42,14 @@ package {
             surface = new Surface(40, 40, stageWidth-80, stageHeight-80);
             ball = new Ball(40, 40, stageWidth-80, stageHeight-80);
             paddle = new Paddle(40, 40, stageWidth-80, stageHeight-80);
+ 			paddletwo = new Paddletwo(40, 40, stageWidth-80, stageHeight-80);
             addChild(surface);
             addChild(ball);
             addChild(paddle);
+			addChild(paddletwo);
+			paddle.setup();
+			paddletwo.setup();
+			
         }
         private function draw(e) {
             ball.draw();
@@ -54,6 +59,7 @@ package {
 
 import flash.display.*;
 import flash.events.*;
+import flash.ui.*;
 
 class Ball extends Shape {
     var rangeX, rangeY, rangeWidth, rangeHeight;
@@ -79,7 +85,7 @@ class Ball extends Shape {
         graphics.drawCircle(x, y, r);
         x0 = x, y0 = y;
     }
-    var dx = 1, dy = 0, v0 = 10;
+    var dx = 1, dy = 2, v0 = 5;
     function draw() {
         //trace("draw() x0=" + x0 + " y0=" + y0 + " r0=" + r0 + " rangeX=" + rangeX + " rangeY=" + rangeY);
         if (x0 - r0 <= rangeX ||
@@ -100,13 +106,10 @@ class Ball extends Shape {
         // then the have collided.
         var rd0 = paddle.r0 + ball.r0;
         if (rd <= rd0) {
-            trace("PONG rd0=" + rd0 + " rd=" + rd);
             var rx0 = rx / rd;
             var ry0 = ry / rd;
-            trace("PONG rx0=" + rx0 + " ry0=" + ry0 + " dx=" + dx + " dy=" + dy);
             dx = dx + rx;
             dy = dy + ry;
-            trace("PONG rx0=" + rx0 + " ry0=" + ry0 + " dx=" + dx + " dy=" + dy);
         }
         move(x0 + v0 * dx, y0 + v0 * dy, r0);
     }
@@ -128,6 +131,9 @@ class Paddle extends Sprite {
         graphics.beginFill(0x5555FF, 1);
         graphics.drawCircle(x0, y0, r0);
     }
+	function setup() {
+ 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownEvent);
+	}
     function move(x, y, r) {
         // x and y are absolute coordinates
         graphics.beginFill(0xAAFFAA);
@@ -146,11 +152,81 @@ class Paddle extends Sprite {
         if (y0 - r0 <= rangeY ||
             y0 + r0 >= rangeY + rangeHeight) {
             dy = -dy;
-        }
-        move(x0 + v0 * dx, y0 + v0 * dy, r0);        
+        }       
     }
+	function keyDownEvent(myevent) {
+		trace(myevent.keyCode)
+		if (myevent.keyCode == Keyboard.UP) {
+			move(x0, y0 - 10, r0);
+		}
+		if (myevent.keyCode == Keyboard.DOWN) {
+			move(x0, y0 + 10, r0);
+		}
+		if (myevent.keyCode == Keyboard.LEFT) {
+			move(x0 - 10, y0, r0);
+		}
+		if (myevent.keyCode == Keyboard.RIGHT) {
+			move(x0 + 10, y0, r0);
+		}     
+	}
+	
 }
-
+class Paddletwo extends Sprite {
+    var rangeX, rangeY, rangeWidth, rangeHeight;
+    var x0, y0, r0;
+    var shape;
+    function Paddletwo(rangeX, rangeY, rangeWidth, rangeHeight) {
+        var child = shape = new Shape;
+        this.rangeX = rangeX;
+        this.rangeY = rangeY;
+        this.rangeWidth = rangeWidth;
+        this.rangeHeight = rangeHeight;
+        x0 = rangeX + rangeWidth / 4;
+        y0 = rangeY + rangeHeight / 2;
+        r0 = 100;
+        graphics.beginFill(0x5555FF, 1);
+        graphics.drawCircle(x0, y0, r0);
+    }
+	function setup() {
+ 		stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownEvent);
+	}
+    function move(x, y, r) {
+        // x and y are absolute coordinates
+        graphics.beginFill(0xAAFFAA);
+        graphics.drawCircle(x0, y0, r0);        
+        graphics.beginFill(0x5555FF);
+        graphics.drawCircle(x, y, r);
+        x0 = x, y0 = y;
+    }
+	var dx = 1, dy = .5, v0 = 10;
+    function draw() {
+        //trace("draw() x0=" + x0 + " y0=" + y0 + " r0=" + r0 + " rangeX=" + rangeX + " rangeY=" + rangeY);
+        if (x0 - r0 <= rangeX ||
+            x0 + r0 >= rangeX + rangeWidth) {
+            dx = -dx;
+        }
+        if (y0 - r0 <= rangeY ||
+            y0 + r0 >= rangeY + rangeHeight) {
+            dy = -dy;
+        }       
+    }
+	function keyDownEvent(myevent) {
+		trace(myevent.keyCode)
+		if (myevent.keyCode == Keyboard.W) {
+			move(x0, y0 - 10, r0);
+		}
+		if (myevent.keyCode == Keyboard.S) {
+			move(x0, y0 + 10, r0);
+		}
+		if (myevent.keyCode == Keyboard.A) {
+			move(x0 - 10, y0, r0);
+		}
+		if (myevent.keyCode == Keyboard.D) {
+			move(x0 + 10, y0, r0);
+		}     
+	}
+	
+}
 class Surface extends Sprite {
     var surfaceX, surfaceY, surfaceWidth, surfaceHeight;
     function Surface(x, y, width, height) {
