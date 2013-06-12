@@ -150,13 +150,12 @@ class Ball extends Shape {
         // x and y are absolute coordinates
         x0 = x0 + v0 * dx;
         y0 = y0 + v0 * dy;
+        graphics.clear();
         graphics.beginFill(0xCC5555);
         graphics.drawCircle(x0, y0, r0);
     }
 
     function draw() {
-        graphics.beginFill(0xAAFFAA);
-        graphics.drawCircle(x0, y0, r0);
         checkWalls();
         checkPaddle(Main.paddle1);
         checkPaddle(Main.paddle2);
@@ -177,7 +176,7 @@ class Paddle extends Sprite {
         this.rangeHeight = rangeHeight;
         x0 = x;
         y0 = y;
-        r0 = 50;
+        r0 = 25;
         graphics.beginFill(0x5555FF, 1);
         graphics.drawCircle(x0, y0, r0);
     }
@@ -190,8 +189,7 @@ class Paddle extends Sprite {
     }
     function move(x, y, r) {
         // x and y are absolute coordinates
-        graphics.beginFill(0xAAFFAA);
-        graphics.drawCircle(x0, y0, r0);
+        graphics.clear();
         graphics.beginFill(0x5555FF);
         graphics.drawCircle(x, y, r);
         x0 = x, y0 = y;
