@@ -31,7 +31,7 @@ package {
     public class Main extends Sprite {
         public static var paddle1, paddle2, ball, surface;
         public function Main() {
-            stage.frameRate = 30;
+            stage.frameRate = 60;
             setup();
             addEventListener(Event.ENTER_FRAME, draw);
         }
@@ -53,8 +53,8 @@ package {
             addChild(paddle1);
             addChild(paddle2);
             addChild((mask = surface.borderMask()));
-            paddle1.setup(Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN);
-            paddle2.setup(Keyboard.A, Keyboard.D, Keyboard.W, Keyboard.S);
+            paddle1.setup(Keyboard.A, Keyboard.D, Keyboard.W, Keyboard.S);
+            paddle2.setup(Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN);
         }
         private function draw(e) {
             ball.draw();
@@ -84,7 +84,7 @@ class Ball extends Shape {
     }
 
 
-    var dx = 3/5, dy = 4/5, v0 = 10;
+    var dx = 3/5, dy = 4/5, v0 = 6;
 
     function checkWalls() {
         if (x0 - r0 <= rangeX) {
@@ -197,11 +197,14 @@ class Paddle extends Sprite {
     function keyDownEvent(myevent) {
         if (myevent.keyCode == this.up) {
             move(x0, y0 - 20, r0);
-        } else if (myevent.keyCode == this.down) {
+        }
+        if (myevent.keyCode == this.down) {
             move(x0, y0 + 20, r0);
-        } else if (myevent.keyCode == this.left) {
+        }
+        if (myevent.keyCode == this.left) {
             move(x0 - 20, y0, r0);
-        } else if (myevent.keyCode == this.right) {
+        }
+        if (myevent.keyCode == this.right) {
             move(x0 + 20, y0, r0);
         }
     }
