@@ -68,7 +68,7 @@ import flash.ui.*;
 
 class Ball extends Shape {
     var rangeX, rangeY, rangeWidth, rangeHeight;
-    var x0, y0, r0;
+    var r;
     var shape;
     function Ball(rangeX, rangeY, rangeWidth, rangeHeight) {
         var child = shape = new Shape;
@@ -76,29 +76,31 @@ class Ball extends Shape {
         this.rangeY = rangeY;
         this.rangeWidth = rangeWidth;
         this.rangeHeight = rangeHeight;
-        x0 = rangeX + 20;
-        y0 = rangeY + rangeHeight / 2;
-        r0 = 8;
+        x = rangeX + 20;
+        y = rangeY + rangeHeight / 2;
+        r = 8;
         graphics.beginFill(0xCC5555, 1);
-        graphics.drawCircle(0, 0, r0);
+        graphics.drawCircle(0, 0, r);
     }
 
 
-    var dx = 3/5, dy = 4/5, v0 = 6;
+    var dx = Math.cos(Math.random() * Math.PI / 2);
+    var dy = Math.cos(Math.random() * Math.PI);
+    var v = 6;
 
     function checkWalls() {
-        if (x0 - r0 <= rangeX) {
-            x0 = rangeX + r0;
+        if (x - r <= rangeX) {
+            x = rangeX + r;
             dx = -dx;
-        } else if (x0 + r0 >= rangeX + rangeWidth) {
-            x0 = rangeX + rangeWidth - r0;
+        } else if (x + r >= rangeX + rangeWidth) {
+            x = rangeX + rangeWidth - r;
             dx = -dx;
         }
-        if (y0 - r0 <= rangeY) {
-            y0 = rangeY + r0;
+        if (y - r <= rangeY) {
+            y = rangeY + r;
             dy = -dy;
-        } else if (y0 + r0 >= rangeY + rangeHeight) {
-            y0 = rangeY + rangeHeight - r0;
+        } else if (y + r >= rangeY + rangeHeight) {
+            y = rangeY + rangeHeight - r;
             dy = -dy;
         }
     }
@@ -109,7 +111,7 @@ class Ball extends Shape {
         var dr = Math.sqrt(xr * xr + yr * yr);
         // If radial distance is less than or equal to combined radii of objects
         // then they have collided.
-        var dr0 = paddle.r0 + ball.r0;
+        var dr0 = paddle.r + ball.r;
         if (dr < dr0) {
             var a = Math.atan2(yr, xr);
             var cosa = Math.cos(a);
@@ -129,8 +131,8 @@ class Ball extends Shape {
             // rotate position back
             var xbf = xb * cosa - yb * sina;
             var ybf = yb * cosa + xb * sina;
-            x0 = paddle.x0 + xbf;
-            y0 = paddle.y0 + ybf;
+            x = paddle.x + xbf;
+            y = paddle.y + ybf;
 
             // rotate direction back
             var dxp = 0;
@@ -144,8 +146,8 @@ class Ball extends Shape {
 
     function move() {
         // x and y are absolute coordinates
-        x = x0 = x0 + v0 * dx;
-        y = y0 = y0 + v0 * dy;
+        x = x + v * dx;
+        y = y + v * dy;
     }
 
     function draw() {
@@ -157,7 +159,7 @@ class Ball extends Shape {
 }
 class Paddle extends Sprite {
     var rangeX, rangeY, rangeWidth, rangeHeight;
-    var x0, y0, r0;
+    var r;
     var shape;
     var left, right, up, down;
     function Paddle(rangeX, rangeY, rangeWidth, rangeHeight, x, y) {
@@ -166,13 +168,13 @@ class Paddle extends Sprite {
         this.rangeY = rangeY;
         this.rangeWidth = rangeWidth;
         this.rangeHeight = rangeHeight;
-        x0 = x;
-        y0 = y;
-        r0 = 25;
+        this.x = x;
+        this.y = y;
+        this.r = 25;
         this.x = x;
         this.y = y;
         graphics.beginFill(0x5555FF, 1);
-        graphics.drawCircle(0, 0, r0);
+        graphics.drawCircle(0, 0, r);
     }
     function setup(left, right, up, down) {
         stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownEvent);
@@ -182,22 +184,21 @@ class Paddle extends Sprite {
         this.down = down;
     }
     function move(x, y, r) {
-        x0 = x, y0 = y;
         this.x = x;
         this.y = y;
     }
     function keyDownEvent(myevent) {
         if (myevent.keyCode == this.up) {
-            move(x0, y0 - 20, r0);
+            move(x, y - 20, r);
         }
         if (myevent.keyCode == this.down) {
-            move(x0, y0 + 20, r0);
+            move(x, y + 20, r);
         }
         if (myevent.keyCode == this.left) {
-            move(x0 - 20, y0, r0);
+            move(x - 20, y, r);
         }
         if (myevent.keyCode == this.right) {
-            move(x0 + 20, y0, r0);
+            move(x + 20, y, r);
         }
     }
 }
