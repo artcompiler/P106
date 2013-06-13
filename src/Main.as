@@ -80,7 +80,7 @@ class Ball extends Shape {
         y0 = rangeY + rangeHeight / 2;
         r0 = 8;
         graphics.beginFill(0xCC5555, 1);
-        graphics.drawCircle(x0, y0, r0);
+        graphics.drawCircle(0, 0, r0);
     }
 
 
@@ -102,12 +102,10 @@ class Ball extends Shape {
             dy = -dy;
         }
     }
-
     function checkPaddle(paddle) {
         var ball = this;
-        //        var paddle = Main.paddle;
-        var xr = ball.x0 - paddle.x0;
-        var yr = ball.y0 - paddle.y0;
+        var xr = ball.x - paddle.x;
+        var yr = ball.y - paddle.y;
         var dr = Math.sqrt(xr * xr + yr * yr);
         // If radial distance is less than or equal to combined radii of objects
         // then they have collided.
@@ -141,18 +139,13 @@ class Ball extends Shape {
             var dyf = dyb * cosa + dxb * sina;
             dx = dxf;
             dy = dyf;
-
-            paddle.draw();
         }
     }
 
     function move() {
         // x and y are absolute coordinates
-        x0 = x0 + v0 * dx;
-        y0 = y0 + v0 * dy;
-        graphics.clear();
-        graphics.beginFill(0xCC5555);
-        graphics.drawCircle(x0, y0, r0);
+        x = x0 = x0 + v0 * dx;
+        y = y0 = y0 + v0 * dy;
     }
 
     function draw() {
@@ -162,7 +155,6 @@ class Ball extends Shape {
         move();
     }
 }
-
 class Paddle extends Sprite {
     var rangeX, rangeY, rangeWidth, rangeHeight;
     var x0, y0, r0;
@@ -177,8 +169,10 @@ class Paddle extends Sprite {
         x0 = x;
         y0 = y;
         r0 = 25;
+        this.x = x;
+        this.y = y;
         graphics.beginFill(0x5555FF, 1);
-        graphics.drawCircle(x0, y0, r0);
+        graphics.drawCircle(0, 0, r0);
     }
     function setup(left, right, up, down) {
         stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownEvent);
@@ -188,11 +182,9 @@ class Paddle extends Sprite {
         this.down = down;
     }
     function move(x, y, r) {
-        // x and y are absolute coordinates
-        graphics.clear();
-        graphics.beginFill(0x5555FF);
-        graphics.drawCircle(x, y, r);
         x0 = x, y0 = y;
+        this.x = x;
+        this.y = y;
     }
     function keyDownEvent(myevent) {
         if (myevent.keyCode == this.up) {
@@ -208,10 +200,6 @@ class Paddle extends Sprite {
             move(x0 + 20, y0, r0);
         }
     }
-    function draw() {
-        graphics.beginFill(0x5555FF, 1);
-        graphics.drawCircle(x0, y0, r0);
-    }
 }
 class Surface extends Sprite {
     var surfaceX, surfaceY, surfaceWidth, surfaceHeight;
@@ -225,7 +213,6 @@ class Surface extends Sprite {
         child.graphics.drawRect(x, y, width, height);
         addChild(child);
     }
-
     function borderMask() {
         var mask = new Shape;
         mask.graphics.beginFill(0x000000, 0);
