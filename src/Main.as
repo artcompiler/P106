@@ -220,7 +220,7 @@ class Surface extends Sprite {
     }
     function borderMask() {
         var mask = new Shape;
-        mask.graphics.beginFill(0x000000, 0);
+        mask.graphics.beginFill(0);
         mask.graphics.drawRect(surfaceX, surfaceY, surfaceWidth, surfaceHeight);
         return mask;
     }
