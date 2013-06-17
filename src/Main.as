@@ -45,7 +45,6 @@ package {
             background(0xEEEEEE);
             surface = new Surface(40, 40, stageWidth-80, stageHeight-80);
             ball = new Ball(40, 40, stageWidth-80, stageHeight-80);
-
             paddle1 = new Paddle(40, 40, stageWidth-80, stageHeight-80, 200, stageHeight / 2);
             paddle2 = new Paddle(40, 40, stageWidth-80, stageHeight-80, stageWidth - 200, stageHeight / 2);
             addChild(surface);
@@ -83,9 +82,9 @@ class Ball extends Shape {
         graphics.drawCircle(0, 0, r);
     }
 
-
-    var dx = Math.cos(Math.random() * Math.PI / 2);
-    var dy = Math.cos(Math.random() * Math.PI);
+    var angle = (Math.random() * 2 - 1) * Math.PI / 2;   // From 90 to -90 degrees
+    var dx = Math.cos(angle);
+    var dy = Math.sin(angle);
     var v = 6;
 
     function checkWalls() {
@@ -143,13 +142,11 @@ class Ball extends Shape {
             dy = dyf;
         }
     }
-
     function move() {
         // x and y are absolute coordinates
         x = x + v * dx;
         y = y + v * dy;
     }
-
     function draw() {
         checkWalls();
         checkPaddle(Main.paddle1);
