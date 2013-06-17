@@ -16,7 +16,7 @@
  */
 
 /*
-  Air Hockey for Shumway
+  Air Hockey like game for Shumway
 */
 
 package {
@@ -29,7 +29,8 @@ package {
     var stageWidth = 800;
     var stageHeight = 600;
     public class Main extends Sprite {
-        public static var paddle1, paddle2, ball, surface;
+        public static var paddle1: Paddle, paddle2: Paddle;
+        public static var ball: Ball, surface: Surface;
         public function Main() {
             stage.frameRate = 60;
             setup();
@@ -66,9 +67,9 @@ import flash.events.*;
 import flash.ui.*;
 
 class Ball extends Shape {
-    var rangeX, rangeY, rangeWidth, rangeHeight;
-    var r;
-    var shape;
+    var rangeX: Number, rangeY: Number, rangeWidth: Number, rangeHeight: Number;
+    var r: Number;
+    var shape: Shape;
     function Ball(rangeX, rangeY, rangeWidth, rangeHeight) {
         var child = shape = new Shape;
         this.rangeX = rangeX;
@@ -82,10 +83,10 @@ class Ball extends Shape {
         graphics.drawCircle(0, 0, r);
     }
 
-    var angle = (Math.random() * 2 - 1) * Math.PI / 2;   // From 90 to -90 degrees
-    var dx = Math.cos(angle);
-    var dy = Math.sin(angle);
-    var v = 6;
+    var angle: Number = (Math.random() * 2 - 1) * Math.PI / 2;   // From 90 to -90 degrees
+    var dx: Number = Math.cos(angle);
+    var dy: Number = Math.sin(angle);
+    var v: Number = 6;
 
     function checkWalls() {
         if (x - r <= rangeX) {
@@ -103,41 +104,41 @@ class Ball extends Shape {
             dy = -dy;
         }
     }
-    function checkPaddle(paddle) {
-        var ball = this;
-        var xr = ball.x - paddle.x;
-        var yr = ball.y - paddle.y;
-        var dr = Math.sqrt(xr * xr + yr * yr);
+    function checkPaddle(paddle: Paddle) {
+        var ball: Ball = this;
+        var xr: Number = ball.x - paddle.x;
+        var yr: Number = ball.y - paddle.y;
+        var dr: Number = Math.sqrt(xr * xr + yr * yr);
         // If radial distance is less than or equal to combined radii of objects
         // then they have collided.
         var dr0 = paddle.r + ball.r;
         if (dr < dr0) {
-            var a = Math.atan2(yr, xr);
-            var cosa = Math.cos(a);
-            var sina = Math.sin(a);
+            var a: Number = Math.atan2(yr, xr);
+            var cosa: Number = Math.cos(a);
+            var sina: Number = Math.sin(a);
 
             // rotate position
-            var xb = dr0; //xr * cosa + yr * sina;
-            var yb = 0; //yr * cosa - xr * sina;
+            var xb: Number = dr0; //xr * cosa + yr * sina;
+            var yb: Number = 0; //yr * cosa - xr * sina;
 
             // rotate direction
-            var dxb = dx * cosa + dy * sina;
-            var dyb = dy * cosa - dx * sina;
+            var dxb: Number = dx * cosa + dy * sina;
+            var dyb: Number = dy * cosa - dx * sina;
 
             // bounce
             dxb = -dxb;
 
             // rotate position back
-            var xbf = xb * cosa - yb * sina;
-            var ybf = yb * cosa + xb * sina;
+            var xbf: Number = xb * cosa - yb * sina;
+            var ybf: Number = yb * cosa + xb * sina;
             x = paddle.x + xbf;
             y = paddle.y + ybf;
 
             // rotate direction back
-            var dxp = 0;
-            var dyp = 0;
-            var dxf = dxb * cosa - dyb * sina;
-            var dyf = dyb * cosa + dxb * sina;
+            var dxp: Number = 0;
+            var dyp: Number = 0;
+            var dxf: Number = dxb * cosa - dyb * sina;
+            var dyf: Number = dyb * cosa + dxb * sina;
             dx = dxf;
             dy = dyf;
         }
@@ -156,11 +157,9 @@ class Ball extends Shape {
 }
 class Paddle extends Sprite {
     var rangeX, rangeY, rangeWidth, rangeHeight;
-    var r;
-    var shape;
-    var left, right, up, down;
+    var r: Number;
+    var left: Number, right: Number, up: Number, down: Number;
     function Paddle(rangeX, rangeY, rangeWidth, rangeHeight, x, y) {
-        var child = shape = new Shape;
         this.rangeX = rangeX;
         this.rangeY = rangeY;
         this.rangeWidth = rangeWidth;
