@@ -30,7 +30,8 @@ package {
     var stageHeight = 600;
     public class Main extends Sprite {
         public static var paddle1: Paddle, paddle2: Paddle;
-        public static var ball: Ball, surface: Surface;
+        public static var balls: Array;
+        public static var surface: Surface;
         public function Main() {
             stage.frameRate = 60;
             setup();
@@ -45,11 +46,15 @@ package {
         private function setup() {
             background(0xEEEEEE);
             surface = new Surface(40, 40, stageWidth-80, stageHeight-80);
-            ball = new Ball(40, 40, stageWidth-80, stageHeight-80);
+            balls = [];
             paddle1 = new Paddle(40, 40, stageWidth-80, stageHeight-80, 200, stageHeight / 2);
             paddle2 = new Paddle(40, 40, stageWidth-80, stageHeight-80, stageWidth - 200, stageHeight / 2);
             addChild(surface);
-            addChild(ball);
+            for (var i = 0; i < 100; i++) {
+                var ball = new Ball(40, 40, stageWidth-80, stageHeight-80);
+                balls[i] = ball;
+                addChild(ball);
+            }
             addChild(paddle1);
             addChild(paddle2);
             addChild((mask = surface.borderMask()));
@@ -57,7 +62,10 @@ package {
             paddle2.setup(Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN);
         }
         private function draw(e) {
-            ball.draw();
+            trace("draw() balls.length=" + balls.length);
+            balls.forEach(function (v, i) {
+                v.draw();
+            });
         }
     }
 }
@@ -183,7 +191,7 @@ class Paddle extends Sprite {
         this.x = x;
         this.y = y;
     }
-    function keyDownEvent(myevent) {
+    function keyDownEvent(myevent: KeyboardEvent) {
         if (myevent.keyCode == this.up) {
             move(x, y - 20, r);
         }
